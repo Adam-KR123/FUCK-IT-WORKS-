@@ -1,0 +1,39 @@
+import socket
+import threading
+import time
+import asyncio
+
+hostname= socket.gethostname()
+host =socket.gethostbyname(hostname)
+port = 8000
+users=[]
+
+class user:
+    def __init__(self,name,socket):
+        self.name=name
+        self.socket=socket
+    def __str__(self):
+        return f"{self.name} ,{self.socket}"
+
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+s.bind((host, port))
+
+def recieving():
+    current_index=users[len(users)-1]
+    while True:
+        data=current_index.socket.recv(1024).decode()
+        print(current_index.name+":"+data)
+
+while True:
+        s.listen()
+        conn,addr=s.accept()
+        print(f"Connected by {addr} + conn:{conn}")
+        new_user= user("User"+str(len(users)+1),conn)
+        users.append(new_user)
+        thread_number=threading.Thread(target=recieving)
+        thread_number.daemon=True
+        thread_number.start()
+
+
+            
+
