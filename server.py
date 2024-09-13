@@ -23,7 +23,15 @@ def recieving():
     while True:
         data=current_index.socket.recv(1024).decode()
         print(current_index.name+":"+data)
-
+        for x in users:
+             x.socket.send(str(current_index.name+":"+data).encode())
+def quit():
+     quit_check=input()
+     if(quit_check=="quit"):
+          s.close()
+thread_quit=threading.Thread(target=quit)
+thread_quit.daemon=True
+thread_quit.start()
 while True:
         s.listen()
         conn,addr=s.accept()
