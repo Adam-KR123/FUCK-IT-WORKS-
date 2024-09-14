@@ -1,7 +1,5 @@
 import socket
 import threading
-import time
-import asyncio
 
 hostname= socket.gethostname()
 host =socket.gethostbyname(hostname)
@@ -20,8 +18,13 @@ s.bind((host, port))
 
 def recieving():
     current_index=users[len(users)-1]
+    name_counter=0
     while True:
         data=current_index.socket.recv(1024).decode()
+        if(name_counter==0):
+             current_index.name=data
+             name_counter+=1
+             continue
         print(current_index.name+":"+data)
         for x in users:
              x.socket.send(str(current_index.name+":"+data).encode())
@@ -35,7 +38,7 @@ thread_quit.start()
 while True:
         s.listen()
         conn,addr=s.accept()
-        print(f"Connected by {addr} + conn:{conn}")
+        print(f"Connected by {addr}")
         new_user= user("User"+str(len(users)+1),conn)
         users.append(new_user)
         thread_number=threading.Thread(target=recieving)

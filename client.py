@@ -1,14 +1,14 @@
 import socket
 import threading
-import time
 
 hostname=socket.gethostname()
 host =socket.gethostbyname(hostname)
 port = 8000
 
 client_socket= socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+user_name=input("Kérem adjon meg egy felhasználónevet:")
 client_socket.connect((host,port))
-print(client_socket)
+client_socket.send(user_name.encode())
 def messaging():
     message=input()
     while message.lower().strip()!="quit":
